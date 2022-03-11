@@ -120,7 +120,7 @@ render는 렌더링 할 내용을 경량화한 React 엘리먼트 반환
 
 - JSX
 javascript 확장한 문법. react와 함께 사용 권장
-'''javascript
+```javascript
 React.createElement("div", {
         className: "shopping-list"
     }, 
