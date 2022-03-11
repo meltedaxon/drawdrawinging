@@ -98,7 +98,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 개별 **component**는
 **props**라는 매개변수를 받아오고
 **render** 함수를 통해 표시할 뷰 계층 구조 반환
-'''javascript
+```javascript
 class ShoppingList extends React.Component{
     render(){
         return(
