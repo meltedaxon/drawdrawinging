@@ -10,10 +10,10 @@ const config = {
   function Pixel(props){
     const style = {"backgroundColor" : props.color}
     return(
-      <button className="pixel" onClick={props.onColor} style = {style}/>
-        
+      <button className="pixel" onClick={props.onColor} style = {style}/>  
     )
   }
+
   class Masterpiece extends React.Component{
     renderPlate(){
       const result = [];
@@ -35,7 +35,7 @@ const config = {
     }
 
     renderPixel(location){
-      const index= flatDIndexOf(location, config.plateWidth, config.plateLength)
+      const index= flatDIndexOf(location)
       return(
       <Pixel color={this.props.cake[index]}
       onColor={()=>this.props.onColor(location)}/>
@@ -59,14 +59,14 @@ const config = {
         history : [{
           cake: Array(config.plateLength*config.plateWidth).fill(null),
         }],
-        stepNumber: 0,
+        currentIndex: 0,
         color: "#000000",
         
       }
     }
     handleColor(location){
-      const index = flatDIndexOf(location,config.plateWidth, config.plateLength);
-      const history = this.state.history;
+      const index = flatDIndexOf(location);
+      const history = this.state.history.slice(this.state.currentIndex);
       const current = history[history.length-1];
       const piece = current.cake.slice();
 
@@ -76,12 +76,29 @@ const config = {
         history: history.concat([{
           cake: piece,
         }]),
-        stepNumber: this.props.stepNumber+1,
+        currentIndex: this.state.currentIndex+1,
       });
     }
+    jumpTo(p){
+      this.setState({
+        
+        currentIndex: p,
+      })
+    }
     render(){
+      console.log(this.state.currentIndex)
       const history = this.state.history;
-      const current = history[history.length-1];
+      const current = history[this.state.currentIndex];
+      
+      const pieces = history.map((step, piece)=>{
+        const level = piece?"#"+piece:"reset";
+        return(
+          <button key={level} onClick={()=>this.jumpTo(piece)}>
+            {level}
+          </button>
+        )
+      })
+
       return (
       <div className = "museumOfDigitalCupcake">
         <div className = "museumOfDigitalCupcake-board">
@@ -90,7 +107,7 @@ const config = {
           onColor={(location)=>{this.handleColor(location)}}/>
         </div>
         <div className = "museumOfDigitalCupcake-info">
-
+            <ol>{pieces}</ol>
         </div>
       </div>
     )
@@ -103,8 +120,8 @@ const config = {
     document.getElementById('root')
   );
 
-  function flatDIndexOf(location, width, length){
+  function flatDIndexOf(location){
     const r = location[0]
     const c = location[1]
-    return ((c+1) + (r*width))-1;
+    return ((c+1) + (r*config.plateWidth))-1;
   }
