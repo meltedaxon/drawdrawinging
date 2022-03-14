@@ -1,41 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
 import './index.css';
+
+const config = {
+  plateWidth : 7,
+  plateLength : 7,
+  maxHistory :7,
+};
   function Pixel(props){
     return(
-      <button className="pixel" onclick={props.onColor}>
+      <button className="pixel" onClick={props.onColor}>
         {props.color}
       </button>
     )
   }
   class Masterpiece extends React.Component{
-    makePlate(){
-      const stackCount = this.props.WIDTH;
-      const queueCount = this.props.LENGTH;
-      const e = React.createElement;
-      e("div", null, ()=>{
-        for(let c = 0; c < stackCount; c++){
-          e("div", {className:"board-row"}, (c)=>{
-            for(let r = 0; r < queueCount; r++){
-              return(
-                <>
-                {this.renderPixel([r, c], this.props.color)}
-                </>
-                )
-            }
-          })
-        }
-      })
+    renderPlate(){
+      const result = [];
+      for(let r = 0; r < config.plateLength; r++){
+        result.push(<div key = {r} className = "board-row">
+        {this.renderLine(r)}
+        </div>)
+      }
+      return result;
     }
-    renderPixel(location, color){
-      <Pixel color={this.props.color}
-      onClick={this.props.onColor(location, color)}/>
+    renderLine(r){
+      const result = [];
+
+      for(let c = 0; c < config.plateWidth; c++){
+        const key = r+","+c
+        result.push(<span key = {key}>{this.renderPixel([r, c])}</span>)
+      }
+      return result;
     }
+
+    renderPixel(location){
+      const index= flatDIndexOf(location, config.plateWidth, config.plateLength)
+      return(
+      <Pixel color={this.props.cake[index]}
+      onColor={()=>this.props.onColor(location)}/>
+      )
+    }
+    
     render(){
-      const plate = this.makePlate();
       return (
         <div>
-          {plate}
+        {this.renderPlate()}
         </div>
       );
     }
@@ -45,24 +55,22 @@ import './index.css';
     constructor(props){
       super(props);
 
-      const MAX_HISTORY=7;
-      const LENGTH=7;
-      const WIDTH=7;
-
       this.state={
         history : [{
-          cake: Array(LENGTH*WIDTH).fill(null),
+          cake: Array(config.plateLength*config.plateWidth).fill(null),
         }],
         stepNumber: 0,
-        color: 0xFFFFFF,
+        color: "#",
+        
       }
     }
-    onColor(location, color){
-      const index = flatDIndexOf(location);
-      const history = this.props.history;
+    handleColor(location){
+      const index = flatDIndexOf(location,config.plateWidth, config.plateLength);
+      const history = this.state.history;
       const current = history[history.length-1];
       const piece = current.cake.slice();
-      piece[index] = color;
+
+      piece[index] = this.state.color;
 
       this.setState({
         history: history.concat([{
@@ -72,8 +80,20 @@ import './index.css';
       });
     }
     render(){
-      return <Masterpiece 
-      onClick={(location, color)=>{this.onColor(location, color)}}/>;
+      const history = this.state.history;
+      const current = history[history.length-1];
+      return (
+      <div className = "museumOfDigitalCupcake">
+        <div className = "museumOfDigitalCupcake-board">
+          <Masterpiece 
+          cake = {current.cake}
+          onColor={(location)=>{this.handleColor(location)}}/>
+        </div>
+        <div className = "museumOfDigitalCupcake-info">
+
+        </div>
+      </div>
+    )
     }
   }
   // ========================================
@@ -84,5 +104,7 @@ import './index.css';
   );
 
   function flatDIndexOf(location, width, length){
-    return (location.r - 1)*width + (location.c*length - 1);
+    const r = location[0]
+    const c = location[1]
+    return ((c+1) + (r*width))-1;
   }

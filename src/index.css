@@ -17,7 +17,7 @@ body {
     margin-bottom: 10px;
   }
   
-  .square {
+  .pixel {
     background: #fff;
     border: 1px solid #999;
     float: left;
@@ -32,20 +32,20 @@ body {
     width: 34px;
   }
   
-  .square:focus {
+  .pixel:focus {
     outline: none;
   }
   
-  .kbd-navigation .square:focus {
+  .kbd-navigation .pixel:focus {
     background: #ddd;
   }
   
-  .game {
+  .museumOfDigitalCupcake {
     display: flex;
     flex-direction: row;
   }
   
-  .game-info {
+  .museumOfDigitalCupcake-info {
     margin-left: 20px;
   }
   
