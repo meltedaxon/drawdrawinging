@@ -8,10 +8,10 @@ const config = {
   maxHistory :7,
 };
   function Pixel(props){
+    const style = {"backgroundColor" : props.color}
     return(
-      <button className="pixel" onClick={props.onColor}>
-        {props.color}
-      </button>
+      <button className="pixel" onClick={props.onColor} style = {style}/>
+        
     )
   }
   class Masterpiece extends React.Component{
@@ -60,7 +60,7 @@ const config = {
           cake: Array(config.plateLength*config.plateWidth).fill(null),
         }],
         stepNumber: 0,
-        color: "#",
+        color: "#000000",
         
       }
     }
