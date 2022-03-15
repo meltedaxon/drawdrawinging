@@ -65,19 +65,24 @@ const config = {
       }
     }
     handleColor(location){
+      console.log("----------handle color---------------")
       const index = flatDIndexOf(location);
-      const history = this.state.history.slice(this.state.currentIndex);
+      const history = this.state.history.slice(0, this.state.currentIndex+1);
       const current = history[history.length-1];
       const piece = current.cake.slice();
 
       piece[index] = this.state.color;
+      console.log("*index:"+index)
+      console.log("*history:"+history)
+      console.log("*historyLenght:"+history.length)
 
       this.setState({
         history: history.concat([{
           cake: piece,
         }]),
-        currentIndex: this.state.currentIndex+1,
+        currentIndex: this.state.history.length,
       });
+      
     }
     jumpTo(p){
       this.setState({
@@ -85,18 +90,30 @@ const config = {
         currentIndex: p,
       })
     }
+    plateReset(){
+      this.setState({
+        history: this.state.history.concat([{
+          cake: Array(config.plateWidth*config.plateLength).fill(null),
+        }]),
+        currentIndex: this.state.history.length-1,
+      })
+    }
     render(){
-      console.log(this.state.currentIndex)
+      console.log("currentIndex:"+this.state.currentIndex)
+      console.log("history:"+this.state.history)
+      console.log("historyLenght:"+this.state.history.length)
       const history = this.state.history;
       const current = history[this.state.currentIndex];
       
       const pieces = history.map((step, piece)=>{
-        const level = piece?"#"+piece:"reset";
-        return(
-          <button key={level} onClick={()=>this.jumpTo(piece)}>
-            {level}
-          </button>
-        )
+        if(piece){
+          const level = "#"+piece;
+          return(
+            <button key={level} onClick={()=>this.jumpTo(piece)}>
+              {level}
+            </button>
+          )
+        }
       })
 
       return (
@@ -106,6 +123,9 @@ const config = {
           cake = {current.cake}
           onColor={(location)=>{this.handleColor(location)}}/>
         </div>
+        <button id = "reset" onClick={()=>this.jumpTo(0)}>
+          reset
+        </button>
         <div className = "museumOfDigitalCupcake-info">
             <ol>{pieces}</ol>
         </div>
