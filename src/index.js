@@ -80,7 +80,7 @@ const config = {
         history: history.concat([{
           cake: piece,
         }]),
-        currentIndex: this.state.history.length,
+        currentIndex: history.length,
       });
       
     }
@@ -95,16 +95,16 @@ const config = {
         history: this.state.history.concat([{
           cake: Array(config.plateWidth*config.plateLength).fill(null),
         }]),
-        currentIndex: this.state.history.length-1,
+        currentIndex: this.state.history.length,
       })
     }
     render(){
-      console.log("currentIndex:"+this.state.currentIndex)
-      console.log("history:"+this.state.history)
-      console.log("historyLenght:"+this.state.history.length)
+      console.log("render, currentIndex:"+this.state.currentIndex)
+      console.log("render, history:"+this.state.history)
+      console.log("render, historyLenght:"+this.state.history.length)
       const history = this.state.history;
       const current = history[this.state.currentIndex];
-      
+      const cake = current.cake.slice();
       const pieces = history.map((step, piece)=>{
         if(piece){
           const level = "#"+piece;
@@ -120,7 +120,7 @@ const config = {
       <div className = "museumOfDigitalCupcake">
         <div className = "museumOfDigitalCupcake-board">
           <Masterpiece 
-          cake = {current.cake}
+          cake = {cake}
           onColor={(location)=>{this.handleColor(location)}}/>
         </div>
         <button id = "reset" onClick={()=>this.jumpTo(0)}>
